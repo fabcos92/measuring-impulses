@@ -43,7 +43,7 @@ class SignalChart(DataVariables):
 testInstance = io.InputConverter()
 conversionError = io.ConversionError()
 
-while Start_time_hours == Start_time_hours and Start_time_minutes == Start_time_minutes and Date == Date:
+while True:
 
     if Start_time_hours == 23 and Start_time_minutes == 60 and Date != Date_end:
         Date = int(Date)
@@ -59,12 +59,8 @@ while Start_time_hours == Start_time_hours and Start_time_minutes == Start_time_
     print "Operating data: Station: {0}, Date: {1} {2}:{3} UTC".format(Station, Date, Start_time_hours_format,
                                                                        Start_time_minutes_format)
 
-    Start_time_hours += (Start_time_minutes / 60)
+    Start_time_hours += (Start_time_minutes // 60)
     Start_time_minutes %= 60
-    str(Start_time_minutes)
-    str(Start_time_hours)
-    str(End_time_minutes)
-    str(End_time_hours)
     Start_time_hours_format = '{:02}'.format(Start_time_hours)
     Start_time_minutes_format = '{:02}'.format(Start_time_minutes)
     End_time_hours_format = '{:02}'.format(End_time_hours)
