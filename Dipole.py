@@ -1,9 +1,16 @@
-import iodata as io
+import iodatapy3 as io
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 import csv
-from Module import *
+from Modulepy3 import *
+
+#####################################################
+# Correct station name implementation into path os. #
+# Work with decoding from bytes                     #
+#####################################################
+
+
 
 class DataVariables():
     def __init__(self, datamatrix):
@@ -43,7 +50,7 @@ class SignalChart(DataVariables):
 testInstance = io.InputConverter()
 conversionError = io.ConversionError()
 
-while True:
+while Start_time_hours == Start_time_hours and Start_time_minutes == Start_time_minutes and Date == Date:
 
     if Start_time_hours == 23 and Start_time_minutes == 60 and Date != Date_end:
         Date = int(Date)
@@ -52,13 +59,12 @@ while True:
         Start_time_minutes = 00
         Start_time_hours = 00
 
-    print "********************************************************"
+    print ("********************************************************")
     Start_time_hours_format = '{:02}'.format(Start_time_hours)
     Start_time_minutes_format = '{:02}'.format(Start_time_minutes)
 
-    print "Operating data: Station: {0}, Date: {1} {2}:{3} UTC".format(Station, Date, Start_time_hours_format,
-                                                                       Start_time_minutes_format)
-
+    print ("Operating data: Station: {0}, Date: {1} {2}:{3} UTC".format(Station, Date, Start_time_hours_format,
+                                                                       Start_time_minutes_format))
     Start_time_hours += (Start_time_minutes // 60)
     Start_time_minutes %= 60
     Start_time_hours_format = '{:02}'.format(Start_time_hours)
@@ -68,10 +74,10 @@ while True:
     int(Start_time_minutes)
     Start_time_minutes += 5
 
-    data = testInstance.convert(r"/Doktorat/Python/Dane/WERA/{0}/{1}/".format(Station, Date),
+    data = testInstance.convert(r"/Doktorat/Python/Dane/WERA/Hylaty/{0}/".format(Date),
                                 "{0}{1}{2}".format(Date, Start_time_hours_format, Start_time_minutes_format),
                                 conversionError)
-    filename = 'S:/Doktorat/Python/Dane/WERA/{0}/{1}/{1}{2}{3}.dat'.format(Station, Date, Start_time_hours_format,
+    filename = 'S:/Doktorat/Python/Dane/WERA/Hylaty/{0}/{0}{1}{2}.dat'.format(Date, Start_time_hours_format,
                                                                           Start_time_minutes_format)
     d = open(filename,'rb')
     degree = u"\u00b0"
@@ -79,11 +85,11 @@ while True:
     header = d.read(headersize)
     plt.figure(figsize=(20.0, 15.0))
     fig = plt.figure(1)
-    ax1 = plt.subplot(211)
+    '''ax1 = plt.subplot(211)
     ax1.set_title(header[:16] + ', ' +                                  # station name
         'Channels: '+header[32:33]+' and '+header[34:35]+ ', '          # canals
         +'Temp'+header[38:43]+degree+'C'                                # temperature
-        +', '+'Time:'+header[26:32]+', '+'Date'+' '+header[16:26])      # date
+        +', '+'Time:'+header[26:32]+', '+'Date'+' '+header[16:26])      # date'''
 
     Charts(data.data[0,], plot_label='Channel 1', line_color='r')
     Charts(data.data[1,], plot_label='Channel 3', line_color='b')
@@ -97,12 +103,12 @@ while True:
     if Save_Print_SavPrin == "p":
         print("Showing figures...")
         plt.show()
-        print "Succesful!"
+        print ("Succesful!")
         if Start_time_hours_format == End_time_hours_format and Start_time_minutes_format == End_time_minutes_format and Date == Date_end:
             break
 
     elif Save_Print_SavPrin == "s":
-        print "Saving: I {0}{1}{2}.csv".format(Station, Start_time_hours_format, Start_time_minutes_format)
+        print ("Saving: I {0}{1}{2}.csv".format(Station, Start_time_hours_format, Start_time_minutes_format))
         SignalChart(data.data[0,], plot_label='Channel 1', line_color='r').save('DipoleBx ' + "{0}".format(Station) + "{0}{1}{2}".format(
                 Date, Start_time_hours_format, Start_time_minutes_format))
         SignalChart(data.data[1,], plot_label='Channel 3', line_color='b').save('DipoleBy ' + "{0}".format(Station) + "{0}{1}{2}".format(
